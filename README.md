@@ -53,13 +53,3 @@ Example Playbook
 &nbsp;&nbsp;&nbsp;&nbsp;\- ansible-role-certbot  
 &nbsp;&nbsp;&nbsp;&nbsp;\- ansible-role-apache-proxy  
 
-
-
-License
--------
-MIT
-
-Author Information
-------------------
-Islam Kambarov
-
