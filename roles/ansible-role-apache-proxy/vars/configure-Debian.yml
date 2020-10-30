@@ -1,0 +1,8 @@
+---
+apache_packages:
+  - apache2
+  - apache2-utils
+apache_package_name: "apache2"
+apache_config_dir: "/etc/{{ apache_package_name }}/sites-enabled"
+certificate_file_dest: "/etc/ssl/certs"
+certificate_key_dest: "/etc/ssl/private"

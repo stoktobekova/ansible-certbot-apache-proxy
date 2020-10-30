@@ -1,0 +1,9 @@
+---
+apache_packages:
+  - httpd
+  - httpd-devel
+  - mod_ssl
+apache_package_name: "httpd"
+apache_config_dir: "/etc/{{ apache_package_name }}/conf.d"
+certificate_file_dest: "/etc/pki/tls/certs"
+certificate_key_dest: "/etc/pki/tls/private"

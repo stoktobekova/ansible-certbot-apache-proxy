@@ -1,0 +1,44 @@
+---
+- name: Ensure Apache is installed.
+  package:
+    name: "{{ apache_packages }}"
+
+- name: Include OS specific variables.
+  include_vars: "configure-{{ ansible_os_family }}.yml"
+
+- name: Copy {{ apache_package_name }} vhost
+  template:
+    src: "vhost.conf"
+    dest: "{{ apache_config_dir }}"
+  notify:
+    - httpd-service-reload
+    - wait-for-httpd
+
+- name: Copy SSL certificate and optional chain file
+  copy:
+    src: "{{ item }}"
+    dest: "{{ certificate_file_dest }}"
+    mode: 0600
+  when: (apache_copy_ssl_files | bool) and (item | length > 0)
+  notify:
+    - httpd-service-reload
+    - wait-for-httpd
+  loop: "{{ [apache_ssl_certificate_file] + [apache_ssl_certificate_chain_file | default()] | unique }}"
+
+- name: Copy SSL certificate key file
+  copy:
+    src: "{{ apache_ssl_certificate_key_file }}"
+    dest: "{{ certificate_key_dest }}"
+    mode: 0600
+  when: apache_copy_ssl_files | bool
+  notify:
+    - httpd-service-reload
+    - wait-for-httpd
+
+- name: Setsebool apache_can_network_connect
+  seboolean:
+    name: httpd_can_network_connect
+    persistent: yes
+    state: yes
+  when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
+
