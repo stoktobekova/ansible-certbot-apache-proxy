@@ -1,0 +1,2 @@
+[group]
+server	ansible_host=XX.XX.XX.XX
