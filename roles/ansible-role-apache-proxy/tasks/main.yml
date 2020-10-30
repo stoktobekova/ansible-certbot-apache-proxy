@@ -1,10 +1,10 @@
 ---
+- name: Include OS specific variables.
+  include_vars: "configure-{{ ansible_os_family }}.yml"
+
 - name: Ensure Apache is installed.
   package:
     name: "{{ apache_packages }}"
-
-- name: Include OS specific variables.
-  include_vars: "configure-{{ ansible_os_family }}.yml"
 
 - name: Copy {{ apache_package_name }} vhost
   template:
