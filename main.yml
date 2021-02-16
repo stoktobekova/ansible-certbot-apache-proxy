@@ -1,50 +1,53 @@
 ---
-- hosts: all
-  become: yes
-
-  vars:
-    apache_create_vhosts: false
-    apache_remove_default_vhost: true
-    certbot_admin_email: "admin@exmaple.com"
-    certbot_create_if_missing: true
-    certbot_create_standalone_stop_services:
-    - httpd
-    certbot_certs:
-    - domains:
-      - "server.exmaple.com"
-    apache_server_name: "server.exmaple.com"
-    apache_default_admin_email: "admin@exmaple.com"
-    apache_copy_ssl_files: false
-    apache_ssl_cert_file_location: "/etc/letsencrypt/live/{{ apache_server_name }}/fullchain.pem"
-    apache_ssl_cert_key_location: "/etc/letsencrypt/live/{{ apache_server_name }}/privkey.pem"
-    apache_proxy_host: "localhost"
-    apache_proxy_port: 8080
-    default_context_path: "/"
-
-  pre_tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: true
-        cache_valid_time: 600
-      when: ansible_os_family == 'Debian'
-      changed_when: false
-    
-    - name: Install cron (Debian)
-      apt:
-        name: cron
-        state: present
-      when: ansible_os_family == 'Debian'
-
-    - name: Install dependencies (RedHat)
-      yum:
-        name:
-        - cronie
-        - epel-release
-      when: ansible_os_family == 'RedHat'
-      
-  roles:
-    - ansible-role-apache
-    - ansible-role-certbot
-    - ansible-role-apache-proxy
-
-
+- hosts: server
+ become: yes
+ become_method: sudo
+ user: centos
+ # hosts: r1soft
+ # - name: Disable Selinux
+ #   selinux:
+ #     state: disabled
+ vars:
+   apache_create_vhosts: false
+   apache_remove_default_vhost: true
+   certbot_admin_email: "salta@gmail.com"
+   certbot_create_if_missing: true
+   certbot_create_standalone_stop_services:
+   - httpd
+   certbot_certs:
+   - domains:
+     - "r1soft.saltadevops.com"
+   apache_server_name: "rr1soft.saltadevops.com"
+   apache_default_admin_email: "salta@gmail.com"
+   apache_copy_ssl_files: false
+   apache_ssl_cert_file_location: "/etc/letsencrypt/live/{{ apache_server_name }}/fullchain.pem"
+   apache_ssl_cert_key_location: "/etc/letsencrypt/live/{{ apache_server_name }}/privkey.pem"
+   apache_proxy_host: "localhost"
+   apache_proxy_port: 8080
+   default_context_path: "/"
+ 
+ pre_tasks:
+   - name: Update apt cache
+     apt:
+       update_cache: true
+       cache_valid_time: 600
+     when: ansible_os_family == 'Debian'
+     changed_when: false
+ 
+   - name: Install cron (Debian)
+     apt:
+       name: cron
+       state: present
+     when: ansible_os_family == 'Debian'
+ 
+   - name: Install dependencies (RedHat)
+     yum:
+       name:
+       - cronie
+       - epel-release
+     when: ansible_os_family == 'RedHat'
+ 
+ roles:
+   - ansible-role-apache
+   - ansible-role-certbot
+   - ansible-role-apache-proxy
